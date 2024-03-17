@@ -2,6 +2,7 @@
 #define GRAPHICS_H
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
