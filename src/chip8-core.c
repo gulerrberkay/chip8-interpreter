@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+
 #include "../include/chip8-core.h"
 #include "../include/opcodes.h"
 
@@ -37,28 +39,28 @@ unsigned char chip8_fontset[80] =
 unsigned short opcode;
 
 // 4K memory
-unsigned char memory[4096];
+unsigned char memory[MEMORY_SIZE];
 
 // CPU regs-8 bits: V0-VE
-unsigned char V[16];
+unsigned char V[REGS_NUM];
 
 // Index register, program counter
 unsigned short I;
 unsigned short pc;
 
 // 2048 pixels (64 x 32) - B&W screen
-unsigned char gfx[64 * 32];
+unsigned char screen[SCREEN_SIZE];
 
 // Timer regs - Counts 60 Hz
 unsigned char delay_timer;
 unsigned char sound_timer;
 
 // Stack pointer: 16 levels
-unsigned short stack[16];
+unsigned short stack[STACK_SIZE];
 unsigned short sp;
 
 // Keypad
-unsigned char key[16];
+unsigned char key[KEYPAD_NUM];
 
 /* Internal Functions */
 static void update_timers()
@@ -128,15 +130,16 @@ void load_rom()
 
 void initialize_chip()
 {
-    pc     = 0x200;  // Program counter starts at 0x200
+    pc     = 0x200;  // Program counter starts at 0x200=512
     opcode = 0;      // Reset current opcode	
     I      = 0;      // Reset index register
     sp     = 0;      // Reset stack pointer
 
-    // Clear display	
-    // Clear stack
-    // Clear registers V0-VF
-    // Clear memory
+    
+    memset(screen, 0x00, sizeof(screen)); // Clear display
+    memset(stack,  0x00, sizeof(stack));  // Clear stack
+    memset(V,      0x00, sizeof(V));      // Clear registers V0-VF
+    memset(memory, 0x00, sizeof(memory)); // Clear memory
 
     // Load fontset
     for(int i = 0; i < 80; ++i)
