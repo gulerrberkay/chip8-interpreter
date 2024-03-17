@@ -75,7 +75,7 @@ void (*Chip8Arithmetic[16]) =
 	cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL
 };
 */
-void update_timer()
+void update_timers()
 {
         // Update timers
     if(delay_timer > 0)
