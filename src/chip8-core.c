@@ -120,9 +120,8 @@ void emulate_cycle()
     
     execute();  
 
-  // Update timers
-
-  update_timers();
+    // Update timers
+    update_timers();
 }
 
 void load_rom()
