@@ -18,7 +18,7 @@ SDL_Surface* customSurface;
 
 // Function to create SDL surface from array
 static SDL_Surface* createSurfaceFromArray(unsigned char* pixels, int width, int height) {
-    SDL_Surface* surface = SDL_CreateRGBSurface(pixels, width, height, 8, 0xFF, 0xFF, 0xFF, 0);
+    SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(pixels, width, height, 8, 0 ,0, 0, 0, 0);
     if (!surface) {
         SDL_Log("Unable to create surface: %s", SDL_GetError());
     }
