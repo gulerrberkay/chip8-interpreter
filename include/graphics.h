@@ -11,15 +11,23 @@ extern unsigned char screen[SCREEN_SIZE];
 const int SCREEN_WIDTH = 32;
 const int SCREEN_HEIGHT = 64;
 
+SDL_Window* window;
+SDL_Surface* screenSurface;
+SDL_Surface* customSurface;
+
+
 // Function to create SDL surface from array
-static SDL_Surface* createSurfaceFromArray(uint8_t* pixels, int width, int height) {
-    SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(pixels, width, height, 8, width * sizeof(uint8_t), 0xFF, 0xFF, 0xFF, 0);
+static SDL_Surface* createSurfaceFromArray(unsigned char* pixels, int width, int height) {
+    SDL_Surface* surface = SDL_CreateRGBSurface(pixels, width, height, 8, 0xFF, 0xFF, 0xFF, 0);
     if (!surface) {
         SDL_Log("Unable to create surface: %s", SDL_GetError());
     }
     return surface;
 }
 
+void update_screen(){
+
+}
 
 extern int setup_graphics(){
     //The window we'll be rendering to
@@ -27,7 +35,6 @@ extern int setup_graphics(){
     
     //The surface contained by the window
     SDL_Surface* screenSurface = NULL;
-    SDL_Surface* customSurface = NULL;
 
     //Initialize SDL
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
@@ -66,11 +73,15 @@ extern int setup_graphics(){
             SDL_Event e; bool quit = false; while( quit == false ){ while( SDL_PollEvent( &e ) ){ if( e.type == SDL_QUIT ) quit = true; } }
         }
     }
+    
+    return 0;
+};
+
+void deinit_screen(){
     // Deinit safely.
     SDL_FreeSurface(customSurface);
     SDL_DestroyWindow( window );
     SDL_Quit();
-    return 0;
-};
+}
 
 #endif
