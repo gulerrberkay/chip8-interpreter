@@ -1,0 +1,26 @@
+COMPILER=gcc
+OPTIONS=-g -pedantic -Wall -Wextra -Werror -Wshadow -Wconversion -Wunreachable-code
+COMPILE=$(COMPILER) $(OPTIONS)
+BUILD=build
+
+# Compile main by default
+all: emulator-app
+
+# $(BUILD)/*.o expands to all .o files in the $(BUILD) directory
+# In this case, we'll get $(BUILD)/file1.o $(BUILD)/file2.o
+emulator-app: main.c $(BUILD)/chip8-core.o
+	$(COMPILE) $< $(BUILD)/*.o -o $@
+
+$(BUILD)/chip8-core.o: chip8-core.c chip8-core.h build
+	$(COMPILE) -c $< -o $@
+
+# Make the build directory if it doesn't exist
+build:
+	mkdir -p $(BUILD)
+
+# Delete the build directory and emulator-app
+clean:
+	rm -rf $(BUILD) emulator-app
+
+# These rules do not correspond to a specific file
+.PHONY: build clean
