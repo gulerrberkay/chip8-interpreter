@@ -7,7 +7,9 @@ SRC_DIR = src
 CC := gcc
 
 # set the compiler flags
-CFLAGS := -Wall `sdl2-config --cflags --libs`
+#CFLAGS := -Wall `sdl2-config --cflags --libs`
+CFLAGS := -g3 -Wall `sdl2-config --cflags --libs`
+
 
 # add header files here
 HDRS := $(INC_DIR)/chip8-core.h \
