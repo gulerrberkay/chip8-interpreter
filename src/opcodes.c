@@ -17,16 +17,18 @@ extern unsigned char key[KEYPAD_NUM];
 static void cpuNULL() 
 {
 	// Do Nothing
-	printf ("Unknown opcode [0x0000]: 0x%X\n", opcode); 
+	DEBUG_PRINT("Unknown opcode [0x0000]: 0x%X\n", opcode);
 }
 
 static void display_clear() 
 {
+	DEBUG_PRINT("Decoded opcode0 = 00E0 - Display clear.\n");
 	memset(screen, 0x00, sizeof(screen)); // 00E0
 }
 static void return_sub() 
 {
 	// Returns from a subroutine - 00EE
+	DEBUG_PRINT("Decoded opcode0 = 00EE - Return from subroutine.\n");
 	pc = stack[sp];
 	--sp;
 }
@@ -44,6 +46,7 @@ static void OPCODE_1()
 {
 	// Jumps to address NNN - 1NNN
 	pc = opcode & 0x0FFF;
+	DEBUG_PRINT("Decoded opcode1 = 1NNN - Jumps to address %04X.\n",pc);
 }
 
 static void OPCODE_2() 
@@ -52,33 +55,43 @@ static void OPCODE_2()
 	stack[sp] = pc;
 	++sp;
 	pc = opcode & 0x0FFF;
+	DEBUG_PRINT("Decoded opcode2 = 2NNN - Calls subroutine at %04X.\n",pc);
+
 }
 
 static void OPCODE_3() 
 {
 	// Do Nothing
+	DEBUG_PRINT("Decoded opcode3 .\n");
+
 }
 
 static void OPCODE_4() 
 {
 	// Do Nothing
+	DEBUG_PRINT("Decoded opcode4 .\n");
+
 }
 
 static void OPCODE_5() 
 {
 	// Do Nothing
+	DEBUG_PRINT("Decoded opcode3 .\n");
+
 }
 
 static void OPCODE_6() 
 {
 	// Sets VX to NN - 6XNN
 	V[(opcode & 0x0F00) >> 8] = opcode & 0x00FF;
+	DEBUG_PRINT("Decoded opcode6 = 6XNN .\n");
 }
 
 static void OPCODE_7() 
 {
 	// Adds NN to VX (carry flag is not changed) - 7XNN
 	V[(opcode & 0x0F00) >> 8] += opcode & 0x00FF;
+	DEBUG_PRINT("Decoded opcode7 = 7XNN .\n");
 }
 
 static void OPCODE_8() 
@@ -95,6 +108,7 @@ static void OPCODE_A()
 {
 	// Sets I to the address NNN - ANNN
 	I = opcode & 0x0FFF;
+	DEBUG_PRINT("Decoded opcodeA = ANNN .\n");
 }
 
 static void OPCODE_B() 
@@ -115,11 +129,13 @@ static void OPCODE_D() // DXYN
 	unsigned char Vy = V[(opcode & 0x00F0) >> 4];
 	unsigned char height = (opcode & 0x000F);
 	unsigned char pixel;
+	DEBUG_PRINT("Decoded opcodeD = DXYN .\n");
+
 
 	V[0xF] = 0;
 	for(int col = 0 ; col < height ; col++){
 		pixel = memory[I + col];
-
+		DEBUG_PRINT("Drawing col=%02X, pixel=%02X, on Vx=%02X, Vy=%02X.\n",col,pixel,Vx,Vy);
 		screen[Vx + Vy*32] ^= pixel;
 
 		if((screen[Vx + Vy*32] & pixel) != 0){

@@ -4,6 +4,7 @@
 extern unsigned char V[REGS_NUM];
 
 int main(){
+    DEBUG_PRINT("Debugging is enabled.\n");
 
     initialize_chip();
     load_rom();
@@ -13,7 +14,7 @@ int main(){
     
     
 
-    int i = 100;
+    int i = 25;
     while(i>0){
         emulate_cycle();
 

@@ -79,12 +79,17 @@ static void update_timers()
 
 static void fetch()
 {
+    printf("\n");
+    DEBUG_PRINT("Fetching opcode...\n");
 	opcode =  memory[pc] << 8 | memory[pc+1];
 	pc += 2;
+    DEBUG_PRINT("opcode = %04X.\n",opcode);
+    DEBUG_PRINT("Program Counter = %04X.\n",pc);
 }
 
 static void execute()
 {
+    DEBUG_PRINT("Executing opcode...\n");
     decode_opcode((opcode&0xF000)>>12);
 }
 
@@ -107,9 +112,10 @@ void update_keypad(){
 
 void load_rom()
 {
+    printf("Loading ROM...\n");
     // pointer demo to FILE
     FILE* demo;
-    int display;
+    unsigned char display;
  
     // Creates a file "demo_file"
     // with file access as read mode
@@ -126,14 +132,17 @@ void load_rom()
         memory[i + 512] = display;
 
         // displaying every characters
-        printf("%02X\n", display);
+        //printf("%02X\n", display);
 
     }
     fclose(demo);
+    printf("Loading ROM has finished successfully.\n");
 }
 
 void initialize_chip()
 {
+    printf("Starting Chip-8 initialization...\n");
+
     pc     = 0x200;  // Program counter starts at 0x200=512
     opcode = 0;      // Reset current opcode	
     I      = 0;      // Reset index register
@@ -149,5 +158,5 @@ void initialize_chip()
     for(int i = 0; i < 80; ++i)
         memory[i] = chip8_fontset[i];	
 
-    printf("Chip-8 is initialized. \n");
+    printf("Chip-8 is initialized.\n");
 }
