@@ -57,6 +57,19 @@ unsigned short sp;
 // Keypad
 unsigned char key[16];
 
+void update_timers()
+{
+        // Update timers
+    if(delay_timer > 0)
+    --delay_timer;
+
+    if(sound_timer > 0)
+    {
+    if(sound_timer == 1)
+        printf("BEEP!\n");
+    --sound_timer;
+    } 
+}
 
 // Function pointers for decode stage.
 void (*Chip8Table[17])();
@@ -74,21 +87,6 @@ void (*Chip8Arithmetic[16]) =
 	cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL,
 	cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL
 };
-
-void update_timers()
-{
-        // Update timers
-    if(delay_timer > 0)
-    --delay_timer;
-
-    if(sound_timer > 0)
-    {
-    if(sound_timer == 1)
-        printf("BEEP!\n");
-    --sound_timer;
-    } 
-}
-
 
 void cpuNULL() 
 {
