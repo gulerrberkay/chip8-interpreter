@@ -4,5 +4,6 @@
 void initialize_chip();
 void load_rom();
 void emulate_cycle();
+void update_key();
 
 #endif

@@ -86,7 +86,6 @@ static void fetch()
 static void execute()
 {
     decode_opcode((opcode&0xF000)>>12);
-    //Chip8Table[(opcode&0xF000)>>12]();
 }
 
 
@@ -101,6 +100,11 @@ void emulate_cycle()
     update_timers();
 }
 
+void update_keypad(){
+    // keypad manipulation
+}
+
+
 void load_rom()
 {
     // pointer demo to FILE
@@ -109,7 +113,7 @@ void load_rom()
  
     // Creates a file "demo_file"
     // with file access as read mode
-    demo = fopen("/home/berkay/git/chip8/roms/IBM", "rb");
+    demo = fopen("/home/berkay/git/chip8-interpreter/roms/IBM", "rb");
 
     for(int i = 0; ;i++){
         // reading file
