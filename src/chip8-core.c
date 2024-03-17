@@ -109,7 +109,7 @@ void load_rom()
  
     // Creates a file "demo_file"
     // with file access as read mode
-    demo = fopen("/home/berkay/git/chip8/roms/BLINKY", "rb");
+    demo = fopen("/home/berkay/git/chip8/roms/IBM", "rb");
 
     for(int i = 0; ;i++){
         // reading file
