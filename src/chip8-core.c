@@ -75,6 +75,20 @@ void (*Chip8Arithmetic[16]) =
 	cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL
 };
 */
+void update_timer()
+{
+        // Update timers
+    if(delay_timer > 0)
+    --delay_timer;
+
+    if(sound_timer > 0)
+    {
+    if(sound_timer == 1)
+        printf("BEEP!\n");
+    --sound_timer;
+    } 
+}
+
 
 void cpuNULL() 
 {
@@ -107,6 +121,8 @@ void emulate_cycle()
     execute();  
 
   // Update timers
+
+  update_timers();
 }
 
 void load_rom()
