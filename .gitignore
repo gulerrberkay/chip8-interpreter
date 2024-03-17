@@ -1,2 +1,4 @@
 *.o
 yedek
+chip8-emulator-app
+.vscode

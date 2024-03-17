@@ -7,15 +7,21 @@ SRC_DIR = src
 CC := gcc
 
 # set the compiler flags
-CFLAGS := -Wall `sdl2-config --cflags --libs`
+#CFLAGS := -Wall `sdl2-config --cflags --libs`
+CFLAGS := -g3 -Wall `sdl2-config --cflags --libs`
+
 
 # add header files here
 HDRS := $(INC_DIR)/chip8-core.h \
-		$(INC_DIR)/newlib.h
+		$(INC_DIR)/graphics.h \
+		$(INC_DIR)/libs.h \
+		$(INC_DIR)/opcodes.h
 
 # add source files here
 SRCS := $(SRC_DIR)/chip8-core.c \
+		$(SRC_DIR)/opcodes.c \
 		$(SRC_DIR)/main.c
+
 
 # generate names of object files
 OBJS := $(SRCS:.c=.o)

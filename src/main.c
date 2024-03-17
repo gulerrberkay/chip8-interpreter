@@ -1,22 +1,33 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "../include/chip8-core.h"
-#include "../include/newlib.h"
-#include <SDL2/SDL.h>
+#include "../include/libs.h"
 
+
+extern unsigned char V[REGS_NUM];
 
 int main(){
 
-    //set_graphs();
-    //set_inputs();
-
-    //SDL_Init(SDL_INIT_VIDEO);
-
     initialize_chip();
     load_rom();
-    emulate_cycle();
+    setup_graphics();
+    //set_inputs();
+
+    
+    
+
+    int i = 100;
+    while(i>0){
+        emulate_cycle();
+
+        if((V[0xF])==1)
+            update_screen();
 
 
+        update_keypad();
 
+        i--;
+    }
+    
+
+
+    deinit_screen();
     return 0;
 }

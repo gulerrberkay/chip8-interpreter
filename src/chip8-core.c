@@ -1,4 +1,9 @@
 #include <stdio.h>
+#include <string.h>
+
+#include "../include/chip8-core.h"
+#include "../include/opcodes.h"
+
 /*
         System's memory map
 ----------------------------------
@@ -34,69 +39,54 @@ unsigned char chip8_fontset[80] =
 unsigned short opcode;
 
 // 4K memory
-unsigned char memory[4096];
+unsigned char memory[MEMORY_SIZE];
 
 // CPU regs-8 bits: V0-VE
-unsigned char V[16];
+unsigned char V[REGS_NUM];
 
 // Index register, program counter
 unsigned short I;
 unsigned short pc;
 
 // 2048 pixels (64 x 32) - B&W screen
-unsigned char gfx[64 * 32];
+unsigned char screen[SCREEN_SIZE];
 
 // Timer regs - Counts 60 Hz
 unsigned char delay_timer;
 unsigned char sound_timer;
 
 // Stack pointer: 16 levels
-unsigned short stack[16];
+unsigned short stack[STACK_SIZE];
 unsigned short sp;
 
 // Keypad
-unsigned char key[16];
-
-/*
-// Function pointers for decode stage.
-void (*Chip8Table[17])();
-void (*Chip8Arithmetic[16])();
-
-void (*Chip8Table[17]) = 
-{
-	cpuNULL      , cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, 
-	cpuARITHMETIC, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL,
-	cpuNULL
-};
-
-void (*Chip8Arithmetic[16]) = 
-{
-	cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL,
-	cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL
-};
-*/
+unsigned char key[KEYPAD_NUM];
 
 /* Internal Functions */
-void fetch()
+static void update_timers()
+{
+        // Update timers
+    if(delay_timer > 0)
+    --delay_timer;
+
+    if(sound_timer > 0)
+    {
+    if(sound_timer == 1)
+        printf("BEEP!\n");
+    --sound_timer;
+    } 
+}
+
+static void fetch()
 {
 	opcode =  memory[pc] << 8 | memory[pc+1];
 	pc += 2;
 }
 
-void execute()
+static void execute()
 {
-   // Chip8Table[(opcode&0xF000)>>12]();
+    decode_opcode((opcode&0xF000)>>12);
 }
-
-void cpuNULL() 
-{
-	// Do Nothing
-}
-
-void cpuARITHMETIC(){
-	//Chip8Arithmetic[(opcode&0x000F)]();
-}
-
 
 
 /* External Functions */
@@ -106,8 +96,14 @@ void emulate_cycle()
     
     execute();  
 
-  // Update timers
+    // Update timers
+    update_timers();
 }
+
+void update_keypad(){
+    // keypad manipulation
+}
+
 
 void load_rom()
 {
@@ -117,7 +113,7 @@ void load_rom()
  
     // Creates a file "demo_file"
     // with file access as read mode
-    demo = fopen("/home/berkay/git/chip8/roms/BLINKY", "rb");
+    demo = fopen("/home/berkay/git/chip8-interpreter/roms/IBM", "rb");
 
     for(int i = 0; ;i++){
         // reading file
@@ -138,15 +134,16 @@ void load_rom()
 
 void initialize_chip()
 {
-    pc     = 0x200;  // Program counter starts at 0x200
+    pc     = 0x200;  // Program counter starts at 0x200=512
     opcode = 0;      // Reset current opcode	
     I      = 0;      // Reset index register
     sp     = 0;      // Reset stack pointer
 
-    // Clear display	
-    // Clear stack
-    // Clear registers V0-VF
-    // Clear memory
+    
+    memset(screen, 0x00, sizeof(screen)); // Clear display
+    memset(stack,  0x00, sizeof(stack));  // Clear stack
+    memset(V,      0x00, sizeof(V));      // Clear registers V0-VF
+    memset(memory, 0x00, sizeof(memory)); // Clear memory
 
     // Load fontset
     for(int i = 0; i < 80; ++i)
