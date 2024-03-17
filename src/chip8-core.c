@@ -57,7 +57,7 @@ unsigned short sp;
 // Keypad
 unsigned char key[16];
 
-/*
+
 // Function pointers for decode stage.
 void (*Chip8Table[17])();
 void (*Chip8Arithmetic[16])();
@@ -74,7 +74,7 @@ void (*Chip8Arithmetic[16]) =
 	cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL,
 	cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL
 };
-*/
+
 void update_timers()
 {
         // Update timers
@@ -96,7 +96,7 @@ void cpuNULL()
 }
 
 void cpuARITHMETIC(){
-	//Chip8Arithmetic[(opcode&0x000F)]();
+    Chip8Arithmetic[(opcode&0x000F)]();
 }
 
 
@@ -109,7 +109,7 @@ void fetch()
 
 void execute()
 {
-   // Chip8Table[(opcode&0xF000)>>12]();
+    Chip8Table[(opcode&0xF000)>>12]();
 }
 
 
