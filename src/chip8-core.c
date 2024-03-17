@@ -76,6 +76,16 @@ void (*Chip8Arithmetic[16]) =
 };
 */
 
+void cpuNULL() 
+{
+	// Do Nothing
+}
+
+void cpuARITHMETIC(){
+	//Chip8Arithmetic[(opcode&0x000F)]();
+}
+
+
 /* Internal Functions */
 void fetch()
 {
@@ -87,16 +97,6 @@ void execute()
 {
    // Chip8Table[(opcode&0xF000)>>12]();
 }
-
-void cpuNULL() 
-{
-	// Do Nothing
-}
-
-void cpuARITHMETIC(){
-	//Chip8Arithmetic[(opcode&0x000F)]();
-}
-
 
 
 /* External Functions */
