@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include "../include/chip8-core.h"
+#include "../include/opcodes.h"
+
 /*
         System's memory map
 ----------------------------------
@@ -57,7 +60,8 @@ unsigned short sp;
 // Keypad
 unsigned char key[16];
 
-void update_timers()
+/* Internal Functions */
+static void update_timers()
 {
         // Update timers
     if(delay_timer > 0)
@@ -71,43 +75,16 @@ void update_timers()
     } 
 }
 
-// Function pointers for decode stage.
-void (*Chip8Table[17])();
-void (*Chip8Arithmetic[16])();
-
-void (*Chip8Table[17]) = 
-{
-	cpuNULL      , cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, 
-	cpuARITHMETIC, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL,
-	cpuNULL
-};
-
-void (*Chip8Arithmetic[16]) = 
-{
-	cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL,
-	cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL
-};
-
-void cpuNULL() 
-{
-	// Do Nothing
-}
-
-void cpuARITHMETIC(){
-    Chip8Arithmetic[(opcode&0x000F)]();
-}
-
-
-/* Internal Functions */
-void fetch()
+static void fetch()
 {
 	opcode =  memory[pc] << 8 | memory[pc+1];
 	pc += 2;
 }
 
-void execute()
+static void execute()
 {
-    Chip8Table[(opcode&0xF000)>>12]();
+    decode_opcode((opcode&0xF000)>>12);
+    //Chip8Table[(opcode&0xF000)>>12]();
 }
 
 

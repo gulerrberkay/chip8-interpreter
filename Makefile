@@ -17,7 +17,9 @@ HDRS := $(INC_DIR)/chip8-core.h \
 
 # add source files here
 SRCS := $(SRC_DIR)/chip8-core.c \
+		$(SRC_DIR)/opcodes.c \
 		$(SRC_DIR)/main.c
+
 
 # generate names of object files
 OBJS := $(SRCS:.c=.o)
