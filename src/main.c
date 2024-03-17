@@ -1,16 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/chip8-core.h"
-#include "../include/newlib.h"
-#include <SDL2/SDL.h>
+#include "../include/libs.h"
+
 
 
 int main(){
 
-    //set_graphs();
+    setup_graphics();
     //set_inputs();
-
-    //SDL_Init(SDL_INIT_VIDEO);
 
     initialize_chip();
     load_rom();
