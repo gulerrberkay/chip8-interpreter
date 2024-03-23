@@ -1,6 +1,8 @@
 #include "../include/opcodes.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 // Take a look at https://en.wikipedia.org/wiki/CHIP-8  -Opcode table section.
 
@@ -61,23 +63,26 @@ static void OPCODE_2()
 
 static void OPCODE_3() 
 {
-	// Do Nothing
+	// Skips the next instruction if VX equals NN 	
+	if ( V[(opcode & 0x0F00)>>8] == (opcode & 0x00FF) )
+		pc += 2;
 	DEBUG_PRINT("Decoded opcode3 .\n");
-
 }
 
 static void OPCODE_4() 
 {
-	// Do Nothing
+	// Skips the next instruction if VX does not equal NN 
+	if ( V[(opcode & 0x0F00)>>8] != (opcode & 0x00FF) )
+		pc += 2;
 	DEBUG_PRINT("Decoded opcode4 .\n");
-
 }
 
 static void OPCODE_5() 
 {
-	// Do Nothing
-	DEBUG_PRINT("Decoded opcode3 .\n");
-
+	// Skips the next instruction if VX equals VY	
+	if ( V[(opcode & 0x0F00)>>8] == V[(opcode & 0x00F0)>>4] )
+		pc += 2;
+	DEBUG_PRINT("Decoded opcode5 .\n");
 }
 
 static void OPCODE_6() 
@@ -94,15 +99,81 @@ static void OPCODE_7()
 	DEBUG_PRINT("Decoded opcode7 = 7XNN .\n");
 }
 
+static void op_8XY0()
+{
+	V[(opcode & 0x0F00)>>8] = V[(opcode & 0x00F0)>>4];
+}
+
+static void op_8XY1()
+{
+	V[(opcode & 0x0F00)>>8] |= V[(opcode & 0x00F0)>>4];
+}
+
+static void op_8XY2()
+{
+	V[(opcode & 0x0F00)>>8] &= V[(opcode & 0x00F0)>>4];
+}
+
+static void op_8XY3()
+{
+	V[(opcode & 0x0F00)>>8] ^= V[(opcode & 0x00F0)>>4];
+}
+
+static void op_8XY4()
+{
+	V[(opcode & 0x0F00)>>8] += V[(opcode & 0x00F0)>>4];
+}
+
+static void op_8XY5()
+{
+	if( V[(opcode & 0x0F00)>>8] >= V[(opcode & 0x00F0)>>4]){
+		V[0xF] = 1;
+	}
+	else{
+		V[0xF] = 0;
+	}
+	V[(opcode & 0x0F00)>>8] -= V[(opcode & 0x00F0)>>4];
+}
+
+static void op_8XY6()
+{
+	V[0xF] = V[(opcode & 0x0F00)>>8] && 0x1;
+	V[(opcode & 0x0F00)>>8] = V[(opcode & 0x0F00)>>8] >> 1;
+}
+
+static void op_8XY7()
+{
+	if( V[(opcode & 0x00F0)>>4] >= V[(opcode & 0x0F00)>>8]){
+		V[0xF] = 1;
+	}
+	else{
+		V[0xF] = 0;
+	}
+	V[(opcode & 0x0F00)>>8] = V[(opcode & 0x00F0)>>4] - V[(opcode & 0x0F00)>>8];
+}
+
+static void op_8XYE()
+{
+	V[0xF] = (V[(opcode & 0x0F00)>>8] && 0x80) >> 7;
+	V[(opcode & 0x0F00)>>8] = V[(opcode & 0x0F00)>>8] << 1;
+}
+
+static void (*Chip8_OPCODE_8[16])() = 
+{
+	op_8XY0, op_8XY1, op_8XY2, op_8XY3, op_8XY4, op_8XY5, op_8XY6, op_8XY7,
+    cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, op_8XYE, cpuNULL,
+};
+
 static void OPCODE_8() 
 {
-	// Do Nothing
+	Chip8_OPCODE_8[(opcode&0x000F)]();
 }
 
 static void OPCODE_9() 
 {
-	// Do Nothing
-}
+	if ( V[(opcode & 0x0F00)>>8] != V[(opcode & 0x00F0)>>4] )
+		pc += 2;
+		}
 
 static void OPCODE_A() 
 {
@@ -113,12 +184,13 @@ static void OPCODE_A()
 
 static void OPCODE_B() 
 {
-	// Do Nothing
+	pc = V[0] + (opcode & 0x0FFF);
 }
 
 static void OPCODE_C() 
 {
-	// Do Nothing
+	srand(time(NULL)); // random seed every time.
+	 V[(opcode & 0x0F00)>>8] = (rand() % 256) & (opcode & 0x00FF);
 }
 
 static void OPCODE_D() // DXYN
@@ -152,14 +224,95 @@ static void OPCODE_D() // DXYN
 
 }
 
+static void op_EXA1()
+{
+
+}
+
+static void op_EX9E()
+{
+	
+}
+
+static void (*Chip8_OPCODE_E[16])() = 
+{
+	cpuNULL, op_EXA1, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL,
+    cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, op_EX9E, cpuNULL,
+};
+
 static void OPCODE_E() 
 {
-	// Do Nothing
+	Chip8_OPCODE_E[(opcode&0x000F)]();
 }
+
+static void op_FX33()
+{
+	
+}
+
+//================================================================================================
+
+static void op_FX15()
+{
+	
+}
+
+static void op_FX55()
+{
+	
+}
+
+static void op_FX65()
+{
+	
+}
+
+static void (*Chip8_FXX5[16])() = 
+{
+	cpuNULL, op_FX15, cpuNULL, cpuNULL, cpuNULL, op_FX55, op_FX65, cpuNULL,
+    cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL,
+};
+
+static void OP_FXX5()
+{
+	Chip8_FXX5[(opcode&0x00F0) >> 4]();
+}
+//================================================================================================
+
+static void op_FX07()
+{
+	
+}
+
+static void op_FX18()
+{
+	
+}
+
+static void op_FX29()
+{
+	
+}
+
+static void op_FX0A()
+{
+	
+}
+
+static void op_FX1E()
+{
+	
+}
+
+static void (*Chip8_OPCODE_F[16])() = 
+{
+	cpuNULL, cpuNULL, cpuNULL, op_FX33, cpuNULL, OP_FXX5, cpuNULL, op_FX07,
+    op_FX18, op_FX29, op_FX0A, cpuNULL, cpuNULL, cpuNULL, op_FX1E, cpuNULL,
+};
 
 static void OPCODE_F() 
 {
-	// Do Nothing
+	Chip8_OPCODE_F[(opcode&0x000F)]();
 }
 
 static void (*Chip8Table[16])() = 
