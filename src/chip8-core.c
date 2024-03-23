@@ -101,39 +101,28 @@ void emulate_cycle()
     
     execute();  
 
-    // Update timers
     update_timers();
 }
 
 void update_keypad(){
-    // keypad manipulation
+    
 }
 
 
 void load_rom()
 {
     printf("Loading ROM...\n");
-    // pointer demo to FILE
     FILE* demo;
     unsigned char display;
  
-    // Creates a file "demo_file"
-    // with file access as read mode
     demo = fopen("/home/berkay/git/chip8-interpreter/roms/IBM", "rb");
-
-    for(int i = 0; ;i++){
-        // reading file
+    for(int i = 0; ;i++)
+    {
         display = fgetc(demo);
- 
-        // end of file indicator
         if (feof(demo))
             break;
- 
+
         memory[i + 512] = display;
-
-        // displaying every characters
-        //printf("%02X\n", display);
-
     }
     fclose(demo);
     printf("Loading ROM has finished successfully.\n");
@@ -148,7 +137,6 @@ void initialize_chip()
     I      = 0;      // Reset index register
     sp     = 0;      // Reset stack pointer
 
-    
     memset(screen, 0x00, sizeof(screen)); // Clear display
     memset(stack,  0x00, sizeof(stack));  // Clear stack
     memset(V,      0x00, sizeof(V));      // Clear registers V0-VF
