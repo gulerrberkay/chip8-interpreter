@@ -133,14 +133,21 @@ static void OPCODE_D() // DXYN
 
 
 	V[0xF] = 0;
-	for(int col = 0 ; col < height ; col++){
-		pixel = memory[I + col];
+	for(int col = 0 ; col < height ; col++)
+	{
+		pixel = memory[I + col]; // 0xAF
 		DEBUG_PRINT("Drawing col=%02X, pixel=%02X, on Vx=%02X, Vy=%02X.\n",col,pixel,Vx,Vy);
-		screen[Vx + Vy*32] ^= pixel;
-
-		if((screen[Vx + Vy*32] & pixel) != 0){
-			V[0xF] = 1;
+		for(int row = 0; row < 8; row++)
+		{
+			int bitMask = 1 << row;
+			if((screen[Vx + row + 64*(Vy+col)] & ((bitMask & pixel) >> row)) == 1)
+			{
+				V[0xF] = 1;
+			}
+			screen[Vx + row + 64*(Vy+col)] ^= (bitMask & pixel) >> row;
 		}
+
+
 	}
 
 }
