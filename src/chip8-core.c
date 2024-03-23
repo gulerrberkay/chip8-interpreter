@@ -79,7 +79,7 @@ static void update_timers()
 
 static void fetch()
 {
-    printf("\n");
+    DEBUG_PRINT("\n");
     DEBUG_PRINT("Fetching opcode...\n");
 	opcode =  memory[pc] << 8 | memory[pc+1];
 	pc += 2;

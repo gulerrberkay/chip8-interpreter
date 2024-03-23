@@ -9,12 +9,9 @@ extern unsigned char screen[SCREEN_SIZE];
 
 
 extern SDL_Window* window;
-extern SDL_Surface* windowSurface;
-extern SDL_Surface* customSurface;
 extern SDL_Renderer* renderer;
-extern SDL_Texture* customTexture;
 
-void update_screen(SDL_Renderer* renderer, SDL_Texture* customTexture);
+void update_screen(SDL_Renderer* renderer);
 int init_screen();
 void deinit_screen();
 

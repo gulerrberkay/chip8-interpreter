@@ -3,10 +3,7 @@
 
 extern unsigned char V[REGS_NUM];
 SDL_Window* window;
-SDL_Surface* windowSurface;
-SDL_Surface* customSurface;
 SDL_Renderer* renderer;
-SDL_Texture* customTexture;
 
 int main(){
     DEBUG_PRINT("Debugging is enabled.\n");
@@ -27,10 +24,10 @@ int main(){
         if( Event.type == SDL_QUIT ) return 0;
         emulate_cycle();
 
-        update_screen(renderer, customTexture);
+        update_screen(renderer);
 
         if((V[0xF])==1)
-            update_screen(renderer, customTexture);
+            update_screen(renderer);
 
 
         update_keypad();
