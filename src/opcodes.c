@@ -139,12 +139,12 @@ static void OPCODE_D() // DXYN
 		DEBUG_PRINT("Drawing col=%02X, pixel=%02X, on Vx=%02X, Vy=%02X.\n",col,pixel,Vx,Vy);
 		for(int row = 0; row < 8; row++)
 		{
-			int bitMask = 1 << row;
-			if((screen[Vx + row + 64*(Vy+col)] & ((bitMask & pixel) >> row)) == 1)
+			int bitMask = 0x80 >> row;
+			if((screen[Vx + row + 64*(Vy+col)] & ((bitMask & pixel) >> (7-row))) == 1)
 			{
 				V[0xF] = 1;
 			}
-			screen[Vx + row + 64*(Vy+col)] ^= (bitMask & pixel) >> row;
+			screen[Vx + row + 64*(Vy+col)] ^= (bitMask & pixel) >> (7-row);
 		}
 
 
