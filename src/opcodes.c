@@ -15,6 +15,9 @@ extern unsigned char screen[SCREEN_SIZE];
 extern unsigned short stack[STACK_SIZE];
 extern unsigned short sp;
 extern unsigned char key[KEYPAD_NUM];
+extern unsigned char chip8_fontset;
+extern unsigned char delay_timer;
+extern unsigned char sound_timer;
 
 static void cpuNULL() 
 {
@@ -224,12 +227,12 @@ static void OPCODE_D() // DXYN
 
 }
 
-static void op_EXA1()
+static void op_EXA1() //keyop
 {
 
 }
 
-static void op_EX9E()
+static void op_EX9E() //keyop
 {
 	
 }
@@ -245,7 +248,7 @@ static void OPCODE_E()
 	Chip8_OPCODE_E[(opcode&0x000F)]();
 }
 
-static void op_FX33()
+static void op_FX33() // TODO
 {
 	
 }
@@ -254,17 +257,21 @@ static void op_FX33()
 
 static void op_FX15()
 {
-	
+	delay_timer = V[(opcode & 0x0F00)>>8];
 }
 
 static void op_FX55()
 {
-	
+	for(int k = 0; k < 16; k++){
+		memory[I+k] = V[0x0 + k];
+	}
 }
 
 static void op_FX65()
 {
-	
+	for(int k = 0; k < 16; k++){
+		V[0x0 + k] = memory[I+k];
+	}
 }
 
 static void (*Chip8_FXX5[16])() = 
@@ -273,7 +280,8 @@ static void (*Chip8_FXX5[16])() =
     cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL, cpuNULL,
 };
 
-static void OP_FXX5()
+// Big notation for additional decoding. OP_
+static void OP_FXX5() 
 {
 	Chip8_FXX5[(opcode&0x00F0) >> 4]();
 }
@@ -281,27 +289,27 @@ static void OP_FXX5()
 
 static void op_FX07()
 {
-	
+	V[(opcode & 0x0F00)>>8] = delay_timer;
 }
 
 static void op_FX18()
 {
-	
+	sound_timer = V[(opcode & 0x0F00)>>8];
 }
 
-static void op_FX29()
+static void op_FX29() // TODO
 {
-	
+	I = 5*((opcode & 0x0F00)>>8); 
 }
 
-static void op_FX0A()
+static void op_FX0A() //keyop
 {
 	
 }
 
 static void op_FX1E()
 {
-	
+	I += V[(opcode & 0x0F00)>>8];
 }
 
 static void (*Chip8_OPCODE_F[16])() = 
