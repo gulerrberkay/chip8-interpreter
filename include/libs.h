@@ -6,9 +6,9 @@
 
 #include <SDL2/SDL.h>
 
-#include "../include/chip8-core.h"
-#include "../include/graphics.h"
-#include "../include/opcodes.h"
+#include "chip8-core.h"
+#include "graphics.h"
+#include "opcodes.h"
 
 // #define DEBUG = 1;
 // #ifdef DEBUG
