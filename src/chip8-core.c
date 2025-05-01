@@ -79,12 +79,17 @@ static void update_timers()
 
 static void fetch()
 {
+    DEBUG_PRINT("\n");
+    DEBUG_PRINT("Fetching opcode...\n");
 	opcode =  memory[pc] << 8 | memory[pc+1];
 	pc += 2;
+    DEBUG_PRINT("opcode = %04X.\n",opcode);
+    DEBUG_PRINT("Program Counter = %04X.\n",pc);
 }
 
 static void execute()
 {
+    DEBUG_PRINT("Executing opcode...\n");
     decode_opcode((opcode&0xF000)>>12);
 }
 
@@ -96,50 +101,42 @@ void emulate_cycle()
     
     execute();  
 
-    // Update timers
     update_timers();
 }
 
 void update_keypad(){
-    // keypad manipulation
+    
 }
 
 
 void load_rom()
 {
-    // pointer demo to FILE
+    printf("Loading ROM...\n");
     FILE* demo;
-    int display;
+    unsigned char display;
  
-    // Creates a file "demo_file"
-    // with file access as read mode
     demo = fopen("/home/berkay/git/chip8-interpreter/roms/IBM", "rb");
-
-    for(int i = 0; ;i++){
-        // reading file
+    for(int i = 0; ;i++)
+    {
         display = fgetc(demo);
- 
-        // end of file indicator
         if (feof(demo))
             break;
- 
+
         memory[i + 512] = display;
-
-        // displaying every characters
-        printf("%02X\n", display);
-
     }
     fclose(demo);
+    printf("Loading ROM has finished successfully.\n");
 }
 
 void initialize_chip()
 {
+    printf("Starting Chip-8 initialization...\n");
+
     pc     = 0x200;  // Program counter starts at 0x200=512
     opcode = 0;      // Reset current opcode	
     I      = 0;      // Reset index register
     sp     = 0;      // Reset stack pointer
 
-    
     memset(screen, 0x00, sizeof(screen)); // Clear display
     memset(stack,  0x00, sizeof(stack));  // Clear stack
     memset(V,      0x00, sizeof(V));      // Clear registers V0-VF
@@ -149,5 +146,5 @@ void initialize_chip()
     for(int i = 0; i < 80; ++i)
         memory[i] = chip8_fontset[i];	
 
-    printf("Chip-8 is initialized. \n");
+    printf("Chip-8 is initialized.\n");
 }

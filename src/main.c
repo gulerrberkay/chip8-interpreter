@@ -2,23 +2,32 @@
 
 
 extern unsigned char V[REGS_NUM];
+SDL_Window* window;
+SDL_Renderer* renderer;
 
 int main(){
+    DEBUG_PRINT("Debugging is enabled.\n");
+
+    SDL_Event Event;
 
     initialize_chip();
     load_rom();
-    setup_graphics();
+    init_screen();
     //set_inputs();
 
     
     
 
-    int i = 100;
-    while(i>0){
+    int i = 25;
+    while(1){
+        SDL_PollEvent(&Event);
+        if( Event.type == SDL_QUIT ) return 0;
         emulate_cycle();
 
+        update_screen(renderer);
+
         if((V[0xF])==1)
-            update_screen();
+            update_screen(renderer);
 
 
         update_keypad();

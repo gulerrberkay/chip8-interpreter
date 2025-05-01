@@ -14,11 +14,12 @@ CFLAGS := -g3 -Wall `sdl2-config --cflags --libs`
 # add header files here
 HDRS := $(INC_DIR)/chip8-core.h \
 		$(INC_DIR)/graphics.h \
-		$(INC_DIR)/libs.h \
-		$(INC_DIR)/opcodes.h
+		$(INC_DIR)/opcodes.h \
+		$(INC_DIR)/libs.h
 
 # add source files here
 SRCS := $(SRC_DIR)/chip8-core.c \
+		$(SRC_DIR)/graphics.c \
 		$(SRC_DIR)/opcodes.c \
 		$(SRC_DIR)/main.c
 
